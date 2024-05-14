@@ -1,5 +1,7 @@
 "use client";
 import { useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { v4 as uuidv4 } from "uuid";
 import BookForm from "../components/BookForm";
 import BookList from "../components/BookList";
@@ -24,9 +26,17 @@ export default function Home() {
         b.id === book.id ? { ...b, ...book } : b
       );
       setBooks(updatedBooks);
+      toast.success("Livro atualizado com sucesso!", {
+        position: "top-right",
+        autoClose: 3000,
+      });
     } else {
       const newBook = { ...book, id: uuidv4() };
       setBooks([...books, newBook]);
+      toast.success("Livro adicionado com sucesso!", {
+        position: "top-right",
+        autoClose: 3000,
+      });
     }
     setCurrentBook(null);
   };
@@ -44,7 +54,7 @@ export default function Home() {
   const welcomeMessage = () => {
     const bookCount = books.length;
     if (bookCount === 1) {
-      return `Você possui: ${bookCount} livro cadastrados.`;
+      return `Você possui: ${bookCount} livro cadastrado.`;
     } else if (bookCount > 1) {
       return `Você possui: ${bookCount} livros cadastrados.`;
     } else {
@@ -53,9 +63,12 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4 ">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+      <ToastContainer />
       <div className="border border-gray-200 rounded-md px-10 py-10 items-center justify-center flex flex-col bg-white">
-        <h1 className="text-3xl font-bold mb-10 w-1/1 ">{welcomeMessage()}</h1>
+        <h1 className="text-3xl font-bold mb-10 w-full text-center">
+          {welcomeMessage()}
+        </h1>
         <BookForm addBook={addBook} currentBook={currentBook} />
       </div>
       <BookList books={books} onDelete={deleteBook} onEdit={editBook} />
